@@ -36,6 +36,10 @@ void saveHTML(int &clientSd, char &response)
 {
   ofstream page;
   page.open("peng.html");
+  if (!page.is_open())
+  {
+    cout << "Error occurred. Unable to open page." << endl;
+  }
   cout << response; // Adding back in the bracket
   page << response; // Adding back in the bracket
   while (read(clientSd, &response, 1) > 0)
@@ -43,6 +47,7 @@ void saveHTML(int &clientSd, char &response)
     cout << response;
     page << response;
   }
+  cout << "\nWriting peng.html..." << endl;
   page.close();
 } // end of saveHTML
 
@@ -79,7 +84,6 @@ void parseHeader(int &clientSd)
   {
     cout << contents << endl;
   }
-
 } // end of parseHeader
 
 //----------------------------------main----------------------------------------
@@ -87,8 +91,8 @@ void parseHeader(int &clientSd)
 //             via the server port number being passed in as an argument, as
 //             well as the hostname of the server, and the server path for the
 //             HTML file being requested. Note: exclude the http:// or https://
-//             prefix to the hostname, and omit the leading slash
-//             for the path name, EX: faculty.washington.edu yangpeng/
+//             prefix to the hostname, and omit the leading and trailing slash
+//             for the path name, EX: faculty.washington.edu yangpeng
 //------------------------------------------------------------------------------
 int main (int argc, char* argv[])
 {
@@ -148,9 +152,9 @@ int main (int argc, char* argv[])
 
   // Build an HTTP GET request
   stringstream ss;
-  ss << "GET /" << serverPath << " HTTP/1.1\r\n"
+  ss << "GET " << serverPath << " HTTP/1.1\r\n"
      << "Host: " << serverHostname  << "\r\n"
-     << "\r\n\r\n";
+     << "\r\n";
   string request = ss.str();
 
   cout << "\nSending HTTP GET Request...\n" << endl;
@@ -158,6 +162,7 @@ int main (int argc, char* argv[])
 
   parseHeader(clientSd);
 
+  cout << "\nClosing connection..." << endl;
   close(clientSd);
 
   return 0;
