@@ -38,7 +38,7 @@ void saveHTML(int &clientSd, char &response)
   page.open("peng.html");
   if (!page.is_open())
   {
-    cout << "Error occurred. Unable to open page." << endl;
+    cout << "Error occurred. Unable to open the file." << endl;
   }
   cout << response; // Adding back in the bracket
   page << response; // Adding back in the bracket
@@ -91,8 +91,8 @@ void parseHeader(int &clientSd)
 //             via the server port number being passed in as an argument, as
 //             well as the hostname of the server, and the server path for the
 //             HTML file being requested. Note: exclude the http:// or https://
-//             prefix to the hostname, and omit the leading and trailing slash
-//             for the path name, EX: faculty.washington.edu yangpeng
+//             prefix to the hostname, and omit the leading slash for the path
+//             name, EX: faculty.washington.edu /yangpeng
 //------------------------------------------------------------------------------
 int main (int argc, char* argv[])
 {
@@ -108,9 +108,20 @@ int main (int argc, char* argv[])
   char* serverPath      = argv[2];
   int port              = atoi(argv[3]);
 
-  struct hostent* host = gethostbyname(serverHostname);
+  // Check if hostname includes http:// or https:// prefixes and remove if so
+  char *temp;
+  if ((temp = strstr(serverHostname, "http://")) != NULL)
+  {
+    serverHostname = serverHostname + 7; // Pushes pointer for array beyond
+    cout << serverHostname << endl;      // undesired chars
+  }
+  if  ((temp = strstr(serverHostname, "https://")) != NULL)
+  {
+    serverHostname = serverHostname + 8;
+  }
 
-  // Checking to ensure hostname IP could be resolved
+  // Convert hostname to IP and ensure hostname IP could be resolved
+  struct hostent* host = gethostbyname(serverHostname);
   if (host == NULL)
   {
     perror("Unable to resolve hostname IP.");

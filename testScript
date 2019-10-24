@@ -1,0 +1,40 @@
+#!/bin/bash
+printf "Beginning tests..."
+printf "\n\n---------------------------------------------------------------------------------------------------------"
+sleep 3
+printf "\n\nTest 1: Access a real server...\n\n"
+sleep 3
+./Retriever faculty.washington.edu /yangpeng/ 80
+printf "\n\nTest 1 Complete..."
+printf "\n\n---------------------------------------------------------------------------------------------------------"
+sleep 3
+printf "\n\nTest 2: Access a file from my Server...\n\n"
+sleep 3
+./Retriever localhost /peng.html 5859
+printf "\n\nTest 2 Complete..."
+printf "\n\n---------------------------------------------------------------------------------------------------------"
+sleep 3
+printf "\n\nTest 3: Request an unauthorized file from my Server...\n\n"
+sleep 3
+./Retriever localhost /SecretFile.html 5859
+printf "\n\nTest 3 Complete..."
+printf "\n\n---------------------------------------------------------------------------------------------------------"
+sleep 3
+printf "\n\nTest 4: Request a forbidden file from my Server...\n\n"
+sleep 3
+./Retriever localhost /../../exam_answers.txt 5859
+printf "\n\nTest 4 Complete..."
+printf "\n\n---------------------------------------------------------------------------------------------------------"
+sleep 3
+printf "\n\nTest 5: Request a non-existent file from my Server..\n\n"
+sleep 3
+./Retriever localhost /LotteryNumbers.html 5859
+printf "\n\nTest 5 Complete..."
+printf "\n\n---------------------------------------------------------------------------------------------------------"
+sleep 3
+printf "\n\nTest 6: Send a malformed request to my Server using curl...\n\n"
+sleep 3
+curl -I localhost:5859/peng.html
+printf "\n\nTest 6 Complete..."
+printf "\n\n---------------------------------------------------------------------------------------------------------"
+printf "\n\nAll tests completed -- closing script.\n\n"
