@@ -1,40 +1,66 @@
 #!/bin/bash
-printf "Beginning tests..."
-printf "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "---------------------------------------------------------------------------------------------------------"
+echo -e "Compiling Server.cpp and Retriever.cpp..."
+echo -e "---------------------------------------------------------------------------------------------------------"
+make
 sleep 3
-printf "\n\nTest 1: Access a real server...\n\n"
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nNOTE: You will need to run the Server in another terminal prior to executing the rest of of this script."
+echo -e "\n\n---------------------------------------------------------------------------------------------------------\n\n"
 sleep 3
-./Retriever faculty.washington.edu /yangpeng/ 80
-printf "\n\nTest 1 Complete..."
-printf "\n\n---------------------------------------------------------------------------------------------------------"
+read -p "Press Enter when you've started the Server by running ./Server in a separate terminal..." input
 sleep 3
-printf "\n\nTest 2: Access a file from my Server...\n\n"
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nBeginning tests..."
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nTest 1: Access a real server...\n\n"
+echo -e "---------------------------------------------------------------------------------------------------------"
 sleep 3
-./Retriever localhost /peng.html 5859
-printf "\n\nTest 2 Complete..."
-printf "\n\n---------------------------------------------------------------------------------------------------------"
+./Retriever faculty.washington.edu /yangpeng/ 80 GET
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nTest 1 Complete..."
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
 sleep 3
-printf "\n\nTest 3: Request an unauthorized file from my Server...\n\n"
+echo -e "\n\nTest 2: Access a file from my Server...\n\n"
+echo -e "---------------------------------------------------------------------------------------------------------"
 sleep 3
-./Retriever localhost /SecretFile.html 5859
-printf "\n\nTest 3 Complete..."
-printf "\n\n---------------------------------------------------------------------------------------------------------"
+./Retriever localhost /peng.html 5859 GET
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nTest 2 Complete..."
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
 sleep 3
-printf "\n\nTest 4: Request a forbidden file from my Server...\n\n"
+echo -e "\n\nTest 3: Request an unauthorized file from my Server...\n\n"
+echo -e "---------------------------------------------------------------------------------------------------------"
 sleep 3
-./Retriever localhost /../../exam_answers.txt 5859
-printf "\n\nTest 4 Complete..."
-printf "\n\n---------------------------------------------------------------------------------------------------------"
+./Retriever localhost /SecretFile.html 5859 GET
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nTest 3 Complete..."
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
 sleep 3
-printf "\n\nTest 5: Request a non-existent file from my Server..\n\n"
+echo -e "\n\nTest 4: Request a forbidden file from my Server...\n\n"
+echo -e "---------------------------------------------------------------------------------------------------------"
 sleep 3
-./Retriever localhost /LotteryNumbers.html 5859
-printf "\n\nTest 5 Complete..."
-printf "\n\n---------------------------------------------------------------------------------------------------------"
+./Retriever localhost /../../exam_answers.txt 5859 GET
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nTest 4 Complete..."
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
 sleep 3
-printf "\n\nTest 6: Send a malformed request to my Server using curl...\n\n"
+echo -e "\n\nTest 5: Request a non-existent file from my Server..\n\n"
+echo -e "---------------------------------------------------------------------------------------------------------"
 sleep 3
-curl -I localhost:5859/peng.html
-printf "\n\nTest 6 Complete..."
-printf "\n\n---------------------------------------------------------------------------------------------------------"
-printf "\n\nAll tests completed -- closing script.\n\n"
+./Retriever localhost /LotteryNumbers.html 5859 GET
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nTest 5 Complete..."
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+sleep 3
+echo -e "\n\nTest 6: Send a malformed (HEAD) request to my Server from the Retriever...\n\n"
+echo -e "---------------------------------------------------------------------------------------------------------"
+sleep 3
+./Retriever localhost /peng.html 5859 HEAD
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nTest 6 Complete..."
+echo -e "\n\n---------------------------------------------------------------------------------------------------------"
+echo -e "\n\nAll tests completed...\n\n"
+echo -e "---------------------------------------------------------------------------------------------------------"
+echo -e "Cleaning all artifacts... Closing test script."
+echo -e "---------------------------------------------------------------------------------------------------------"

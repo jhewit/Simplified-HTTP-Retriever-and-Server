@@ -8,3 +8,6 @@ Server: Server.cpp
 
 Retriever: Retriever.cpp
 		g++ Retriever.cpp -o Retriever
+
+clean:
+		rm Server Retriever

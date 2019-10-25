@@ -34,6 +34,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 void saveHTML(int &clientSd, char &response)
 {
+  cout << "-------------------------------------------------------------------" << endl;
   ofstream page;
   page.open("peng.html");
   if (!page.is_open())
@@ -47,8 +48,10 @@ void saveHTML(int &clientSd, char &response)
     cout << response;
     page << response;
   }
-  cout << "\nWriting peng.html..." << endl;
+  cout << "\n-------------------------------------------------------------------" << endl;
+  cout << "Writing peng.html..." << endl;
   page.close();
+  cout << "-------------------------------------------------------------------" << endl;
 } // end of saveHTML
 
 //--------------------------------parseHeader-----------------------------------
@@ -82,7 +85,9 @@ void parseHeader(int &clientSd)
   }
   else
   {
-    cout << contents << endl;
+    cout << "-------------------------------------------------------------------" << endl;
+    cout << contents;
+    cout << "-------------------------------------------------------------------" << endl;
   }
 } // end of parseHeader
 
@@ -97,7 +102,7 @@ void parseHeader(int &clientSd)
 int main (int argc, char* argv[])
 {
   // Checking to ensure the correct number of arguments are being received
-  if (argc < 4)
+  if (argc < 5)
   {
     perror("Incorrect number of arguments entered. Please run again.");
     exit(1);
@@ -107,6 +112,7 @@ int main (int argc, char* argv[])
   char* serverHostname  = argv[1];
   char* serverPath      = argv[2];
   int port              = atoi(argv[3]);
+  char* requestType     = argv[4];
 
   // Check if hostname includes http:// or https:// prefixes and remove if so
   char *temp;
@@ -161,19 +167,20 @@ int main (int argc, char* argv[])
   // Create array of buffer size for GET request
   char getRequestBuffer[BUF_SIZE];
 
+  string httpType(requestType);
   // Build an HTTP GET request
   stringstream ss;
-  ss << "GET " << serverPath << " HTTP/1.1\r\n"
+  ss << httpType << " " << serverPath << " HTTP/1.1\r\n"
      << "Host: " << serverHostname  << "\r\n"
      << "\r\n";
   string request = ss.str();
 
-  cout << "\nSending HTTP GET Request...\n" << endl;
+  cout << "\nSending HTTP " << httpType << " Request..." << endl;
   write(clientSd, request.c_str(), request.length());
 
   parseHeader(clientSd);
 
-  cout << "\nClosing connection..." << endl;
+  cout << "\nClosing connection...";
   close(clientSd);
 
   return 0;

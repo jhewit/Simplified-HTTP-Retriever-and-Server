@@ -36,11 +36,12 @@ struct thread_data
 //------------------------------------------------------------------------------
 void *serverResponse(void *data)
 {
-  // Initializing char pointers
+  cout << "-------------------------------------------------------------------" << endl;
+  // Initializing char pointers and buffer
   char *request, *path, *newpath, *temp;
   char get[3], http[9];
   FILE *filePtr;
-  char buffer[BUF_SIZE]; //discard if find size of file
+  char buffer[BUF_SIZE];
 
   // Allocating memory size of the arrays
   request = (char*)malloc(BUF_SIZE*sizeof(char));
@@ -58,7 +59,7 @@ void *serverResponse(void *data)
   string response;
   if ((temp = strstr(newpath, "../")) != NULL)
   {
-    ss << "HTTP/1.1 403 Forbidden\r\n\r\n";
+    ss << "HTTP/1.1 403 Forbidden\r\n";
     response = ss.str();
     send(((thread_data *)data)->sd, response.c_str(), strlen(response.c_str()), 0);
     close(((thread_data *)data)->sd);
@@ -66,7 +67,7 @@ void *serverResponse(void *data)
   }
   else if ((temp = strstr(newpath, "SecretFile.html")) != NULL)
   {
-    ss << "HTTP/1.1 401 Unauthorized\r\n\r\n";
+    ss << "HTTP/1.1 401 Unauthorized\r\n";
     response = ss.str();
     send(((thread_data *)data)->sd, response.c_str(), strlen(response.c_str()), 0);
     close(((thread_data *)data)->sd);
@@ -74,7 +75,7 @@ void *serverResponse(void *data)
   }
   else if ((temp = strstr(get, "GET")) == NULL)
   {
-    ss << "HTTP/1.1 400 Bad Request\r\n\r\n";
+    ss << "HTTP/1.1 400 Bad Request\r\n";
     response = ss.str();
     send(((thread_data *)data)->sd, response.c_str(), strlen(response.c_str()), 0);
     close(((thread_data *)data)->sd);
@@ -82,7 +83,7 @@ void *serverResponse(void *data)
   }
   else if ((filePtr = fopen(newpath, "r")) == NULL)
   {
-    ss << "HTTP/1.1 404 Not Found\r\n\r\n";
+    ss << "HTTP/1.1 404 Not Found\r\n";
     response = ss.str();
     send(((thread_data *)data)->sd, response.c_str(), strlen(response.c_str()), 0);
     close(((thread_data *)data)->sd);
@@ -92,13 +93,12 @@ void *serverResponse(void *data)
   {
     ss << "HTTP/1.1 200 OK\r\n"
        << "Content-Type: text/html\r\n"
-       << "Connection: close\r\n"
-       << "\r\n";
+       << "Connection: close\r\n";
     response = ss.str();
     send(((thread_data *)data)->sd, response.c_str(), strlen(response.c_str()), 0);
     // Loop through file until all the data has been sent to the client
     memset(&buffer, 0, sizeof(buffer));
-    while (!feof(filePtr)) //sends the file
+    while (!feof(filePtr))
     {
      fread(&buffer, sizeof(buffer), 1, filePtr);
      send(((thread_data *)data)->sd, buffer, sizeof(buffer), 0);
@@ -107,6 +107,7 @@ void *serverResponse(void *data)
     close(((thread_data *)data)->sd);
     cout << "\nHTML file sent. Closing connection to client..." << endl;
   }
+  cout << "\n-------------------------------------------------------------------" << endl;
 } // end of serverResponse
 
 //----------------------------------main----------------------------------------
@@ -150,6 +151,7 @@ int main ()
   // Instruct the operating system to listen to up to n connection requests
   listen(serverSd, 10);
 
+  cout << "-------------------------------------------------------------------" << endl;
   cout << "Server started and listening on port " << PORT << "..." << endl;
 
   // Receive a request from a client
@@ -164,6 +166,7 @@ int main ()
     {
       perror("Unable to accept incoming socket connection.");
     }
+    cout << "-------------------------------------------------------------------" << endl;
     cout << "Accepted inbound connection from client..." << endl;
 
     // Create new thread
